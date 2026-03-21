@@ -1,0 +1,7 @@
+Django
+gunicorn
+python-dotenv
+stripe
+boto3
+django-storages
+dj-database-url
