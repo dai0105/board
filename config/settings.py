@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-a_dv6qqggxd9_(xawf(^e4jz-llltir$690)w=%g7w^5gp*4(d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "board-25nz.onrender.com",
+]
 
 
 # Application definition
@@ -126,9 +130,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-R2_ENDPOINT = "https://624001eff91ee0dc44d797059777dd49.r2.cloudflarestorage.com"
-R2_ACCESS_KEY_ID = "0eb3850aefeb65f64ad95920f682bd66"
-R2_SECRET_ACCESS_KEY = "abde7112bc9ee60943aff29985d43b955b847f7d201953df2f22382c75f9033f"
-R2_THREAD_BUCKET_NAME = "thread-media"
-R2_THREAD_PUBLIC_URL = "https://pub-259ebd04bc4e43cb9a50509434b58701.r2.dev" 
+import os
 
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_THREAD_PUBLIC_URL = os.environ.get("AWS_THREAD_PUBLIC_URL")
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = os.environ.get("DEBUG") == "True"
