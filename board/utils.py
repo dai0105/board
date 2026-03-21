@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 
 def upload_to_r2_thread(file):
+    
     ext = file.name.split('.')[-1]
     filename = f"{uuid.uuid4()}.{ext}"
 
