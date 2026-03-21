@@ -32,8 +32,10 @@
     <label>タグ</label>
     <div class="tag-list">
         {% for checkbox in form.tags %}
-            <input type="checkbox" id="{{ checkbox.id_for_label }}" name="tags" value="{{ checkbox.data.value }}">
-            <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+            <label class="tag-badge">
+                {{ checkbox.tag }}  <!-- Django が生成した input をそのまま使う -->
+                {{ checkbox.choice_label }}
+            </label>
         {% endfor %}
     </div>
 
