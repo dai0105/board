@@ -1,0 +1,249 @@
+body {
+    background: #f7f7f7;
+    font-family: sans-serif;
+    transform: none !important;
+
+}
+
+.page-wrapper {
+    padding-bottom: 600px !important;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+/* レスのカード */
+.reply-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column; /* ← ここを追加 */
+    gap: 6px; /* ← 少しだけ詰める */
+}
+
+
+
+/* 本文 */
+.reply-card .content {
+    font-size: 15px;
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+/* メタ情報 */
+.reply-card .meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.reply-number {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+
+.reply-form {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    gap: 20px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+    z-index: 99999 !important;
+}
+
+
+
+.reply-form textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.reply-form textarea:focus {
+    outline: none;
+    border-color: #ff8fb1;
+    box-shadow: 0 0 0 3px rgba(255,143,177,0.3);
+}
+
+.reply-form button {
+    background: #ff8fb1;
+    color: white;
+    border: none;
+    padding: 16px 0;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;   /* ← これを追加 */
+}
+
+.reply-form button:hover {
+    background: #ff7aa3;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #ff8fb1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+.thread-header {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.icon-area img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.default-icon {
+    width: 60px;
+    height: 60px;
+    background: #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 12px;
+}
+
+.thread-info {
+    flex: 1;
+}
+
+.thread-title {
+    margin: 0;
+    font-size: 20px;
+}
+
+.thread-content {
+    margin: 6px 0;
+    color: #444;
+    white-space: pre-wrap;
+}
+
+.tags {
+    margin-top: 6px;
+}
+
+.tag {
+    display: inline-block;
+    background: #ff8fb1;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.reply-image {
+    max-width: 240px;   /* ← ちょうど良いサイズ */
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 8px;
+    display: block;
+    margin-left: 0;
+}
+
+.reply-video {
+    max-width: 300px;
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 8px;
+    display: block;
+    margin-left: 0;
+}
+
+.reply-btn {
+    background: #f7c9da;          /* 優しいピンク */
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 12px;          /* 丸み */
+    cursor: pointer;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.reply-btn:hover {
+    background: #e8b0c6;          /* 少し濃いピンク */
+    transform: translateY(-1px);  /* ふわっと浮く */
+}
+
+.reply-btn:active {
+    transform: translateY(0);     /* 押した感 */
+}
+
+.reply-list {
+    padding-bottom: 0 !important;
+}
+
+#load-more-area {
+    position: relative;
+    z-index: 10000; /* ← reply-form より前に出す */
+    position: static !important;
+    text-align: center;
+    margin: 20px 0 40px;
+}
+
+#load-more-btn {
+    background: #ff8fb1;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: 0.2s ease;
+    width: 80%;
+    max-width: 300px;
+}
+
+#load-more-btn:hover {
+    background: #ff7aa3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.18);
+}
+
+#load-more-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}

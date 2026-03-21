@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'board/thread_create.css' %}">
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>スレ作成</title>
+</head>
+<body>
+
+<a href="{% url 'thread_list' %}" class="back-btn">← スレ一覧に戻る</a>
+<h2>スレを作成</h2>
+
+<!-- ★ 画像アップロードには enctype が必須！ -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- タイトル -->
+    <label for="id_title">タイトル</label>
+    {{ form.title }}
+
+    <!-- 内容 -->
+    <label for="id_content">内容</label>
+    {{ form.content }}
+
+    <!-- ★ アイコン画像 -->
+    <label for="id_icon">アイコン画像（任意）</label>
+    {{ form.icon }}
+
+    <!-- タグ（バッジ風） -->
+    <label>タグ</label>
+    <div class="tag-list">
+        {% for checkbox in form.tags %}
+            <input type="checkbox" id="{{ checkbox.id_for_label }}" name="tags" value="{{ checkbox.data.value }}">
+            <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+        {% endfor %}
+    </div>
+
+    <button type="submit">作成</button>
+</form>
+
+</body>
+</html>

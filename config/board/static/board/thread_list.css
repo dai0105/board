@@ -1,0 +1,146 @@
+body {
+    background: #f7f7f7;
+    font-family: sans-serif;
+    padding: 16px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ccc;
+    flex-shrink: 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.create-thread-btn {
+    display: inline-block;
+    background: #ff8fb1;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: 0.2s;
+    margin-bottom: 16px;
+}
+
+.create-thread-btn:hover {
+    background: #ff7aa3;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+.tags {
+    margin: 4px 0;
+}
+
+.tag {
+    display: inline-block;
+    background: #ff8fb1;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.preview {
+    font-size: 14px;
+    color: #555;
+    margin: 6px 0 10px;
+    line-height: 1.5;
+}
+
+.search-box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.search-box input,
+.search-box select {
+    padding: 6px 8px;
+    font-size: 14px;
+}
+
+.search-box button {
+    padding: 6px 12px;
+    background: #ff8fb1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.result-count {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.icon img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#load-more-area {
+    text-align: center;
+    margin: 30px 0 60px;
+}
+
+#load-more-btn {
+    background: #ff8fb1;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: 0.2s ease;
+    width: 80%;
+    max-width: 300px;
+}
+
+#load-more-btn:hover {
+    background: #ff7aa3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.18);
+}
+
+#load-more-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}

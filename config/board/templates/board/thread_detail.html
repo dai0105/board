@@ -1,0 +1,183 @@
+{% load time_filters %}
+{% load static %}
+{% load reply_filters %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ thread.title }}</title>
+    <link rel="stylesheet" href="{% static 'board/thread_detail.css' %}">
+</head>
+
+<body>
+   <a href="{% url 'thread_list' %}" class="back-btn">← スレ一覧に戻る</a>
+
+    
+
+    <form method="POST" class="reply-form" enctype="multipart/form-data">
+        <h3>レスを書く</h3>
+        {% csrf_token %}
+        <textarea name="content" placeholder="レス内容を入力…"></textarea>
+
+        <label>画像</label>
+        <input type="file" name="image_file" accept="image/*">
+
+        <label>動画</label>
+        <input type="file" name="video_file" accept="video/*">
+
+        <button type="submit">投稿</button>
+    </form>
+
+    <!-- ▼ page-wrapper 開始 -->
+    <div class="page-wrapper">
+
+        <!-- ▼ スレヘッダー -->
+        <div class="thread-header">
+            <div class="icon-area">
+                {% if thread.icon %}
+                    <img src="{{ thread.icon.url }}" alt="icon">
+                {% else %}
+                    <div class="default-icon">icon</div>
+                {% endif %}
+            </div>
+
+            <div class="thread-info">
+                <h2 class="thread-title">{{ thread.title }}</h2>
+
+                {% if thread.content %}
+                    <p class="thread-content">{{ thread.content|linebreaksbr }}</p>
+                {% endif %}
+
+                <div class="tags">
+                    {% for tag in thread.tags.all %}
+                        <span class="tag">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- ▲ スレヘッダー -->
+
+        <!-- ▼ レス一覧 -->
+        <div class="reply-list">
+            {% for r in replies %}
+            <div class="reply-card" id="reply-{{ r.number }}">
+                <div class="info">
+                    <div class="content">
+                        <div class="reply-number">#{{ r.number }}</div>
+
+                        <div class="reply-text">
+                            {{ r.obj.content|reply_links|linebreaksbr }}
+                        </div>
+
+                        {% if r.image %}
+                            <img src="{{ r.image }}" class="reply-image">
+                        {% endif %}
+
+                        {% if r.video %}
+                            <video src="{{ r.video }}" controls class="reply-video"></video>
+                        {% endif %}
+                    </div>
+
+                    <div class="meta">
+                        投稿: {{ r.obj.created_at|jtimesince }}
+
+                        <button type="button" class="reply-btn" onclick="insertReply({{ r.number }})">
+                            返信
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- ▲ レス一覧 -->
+
+        <!-- ▼ もっと見る（★ page-wrapper の中に移動） -->
+        <div id="load-more-area">
+            <button id="load-more-btn">もっと見る</button>
+        </div>
+
+    </div>
+    <!-- ▲ page-wrapper 終了 -->
+
+    <!-- ▼ 返信（>>番号）挿入 -->
+    <script>
+        function insertReply(num) {
+            const textarea = document.querySelector('textarea[name="content"]');
+            textarea.value += `>>${num} `;
+            textarea.focus();
+        }
+    </script>
+
+    <!-- ▼ 相対時間（jtimesince の JS 版） -->
+    <script>
+        function timeSince(dateString) {
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+
+            const intervals = [
+                { label: "年", seconds: 31536000 },
+                { label: "ヶ月", seconds: 2592000 },
+                { label: "日", seconds: 86400 },
+                { label: "時間", seconds: 3600 },
+                { label: "分", seconds: 60 },
+            ];
+
+            for (const interval of intervals) {
+                const count = Math.floor(seconds / interval.seconds);
+                if (count >= 1) {
+                    return `${count}${interval.label}前`;
+                }
+            }
+            return "たった今";
+        }
+    </script>
+
+    <!-- ▼ もっと見る（追加読み込み） -->
+    <script>
+        let offset = {{ replies|length }};
+        const threadId = {{ thread.id }};
+
+        document.getElementById("load-more-btn").addEventListener("click", function() {
+
+            fetch(`/thread/${threadId}/load_more/?offset=${offset}`)
+                .then(response => response.json())
+                .then(data => {
+                    const replies = data.replies;
+                    if (replies.length === 0) {
+                        document.getElementById("load-more-btn").innerText = "これ以上ありません";
+                        return;
+                    }
+
+                    const container = document.querySelector(".reply-list");
+
+                    replies.forEach(r => {
+                        const div = document.createElement("div");
+                        div.classList.add("reply-card");
+                        div.id = `reply-${r.number}`;
+                        div.innerHTML = `
+                            <div class="info">
+                                <div class="content">
+                                    <div class="reply-number">#${r.number}</div>
+                                    <div class="reply-text">${r.content}</div>
+                                    ${r.image ? `<img src="${r.image}" class="reply-image">` : ""}
+                                    ${r.video ? `<video src="${r.video}" controls class="reply-video"></video>` : ""}
+                                </div>
+                                <div class="meta">
+                                    投稿: ${timeSince(r.created_at)}
+                                    <button type="button" class="reply-btn" onclick="insertReply(${r.number})">
+                                        返信
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+
+                    offset += replies.length;
+                });
+        });
+    </script>
+
+</body>
+</html>

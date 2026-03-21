@@ -1,0 +1,114 @@
+/* 全体の余白 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+/* ラベル */
+form label {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* テキスト入力 */
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    line-height: 1.6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+form textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+/* フォーカス時のピンク */
+form input[type="text"]:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #ff8fb1;
+    box-shadow: 0 0 0 3px rgba(255,143,177,0.3);
+}
+
+/* チェックボックスのタグ一覧 */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-top: 4px;
+}
+
+/* チェックボックスを隠す */
+.tag-list input[type="checkbox"] {
+    display: none;
+}
+
+/* バッジ風ラベル */
+.tag-list label {
+    background: #ffd1df;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid #ffb3c9;
+    transition: 0.2s;
+    user-select: none;
+}
+
+/* ホバー */
+.tag-list label:hover {
+    background: #ffb3c9;
+}
+
+/* チェック時 */
+.tag-list input[type="checkbox"]:checked + label {
+    background: #ff8fb1;
+    color: white;
+    border-color: #ff8fb1;
+}
+
+
+/* 作成ボタン */
+form button {
+    background: #ff8fb1;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+form button:hover {
+    background: #ff7aa3;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #ff8fb1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
