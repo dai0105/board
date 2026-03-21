@@ -28,5 +28,5 @@ class ThreadForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # ★ 内容は必須ではない
         self.fields['content'].required = False
+        self.fields['icon'].required = False  # ★ URLField なので必須じゃない

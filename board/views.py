@@ -101,7 +101,15 @@ def thread_create(request):
     if request.method == 'POST':
         form = ThreadForm(request.POST, request.FILES)
         if form.is_valid():
-            thread = form.save()
+            thread = form.save(commit=False)
+
+            # ★ R2 にアップロードして URL を取得
+            image = request.FILES.get("icon")
+            if image:
+                thread.icon = upload_to_r2_thread(image)
+
+            thread.save()
+            form.save_m2m()
             return redirect('thread_detail', thread.id)
     else:
         form = ThreadForm()

@@ -14,7 +14,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     tags = models.ManyToManyField(Tag, blank=True)
-    icon = models.ImageField(upload_to=upload_to_r2_thread, blank=True, null=True)
+    icon = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
