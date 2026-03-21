@@ -13,6 +13,8 @@ class ReplyForm(forms.ModelForm):
         fields = ['content', 'image', 'video']
 
 class ThreadForm(forms.ModelForm):
+    icon = forms.FileField(required=False)
+
     class Meta:
         model = Thread
         fields = ['title', 'content', 'icon', 'tags']
@@ -29,4 +31,3 @@ class ThreadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['content'].required = False
-        self.fields['icon'].required = False  # ★ URLField なので必須じゃない
