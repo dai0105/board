@@ -5,3 +5,4 @@ stripe
 boto3
 django-storages
 dj-database-url
+whitenoise
