@@ -11,7 +11,7 @@
 
 <a href="{% url 'thread_list' %}" class="back-btn">← スレ一覧に戻る</a>
 <h2>スレを作成</h2>
-
+{{ form.errors }}
 <!-- ★ 画像アップロードには enctype が必須！ -->
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
