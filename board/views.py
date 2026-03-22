@@ -137,6 +137,25 @@ def thread_create(request):
 def thread_detail(request, thread_id):
     thread = get_object_or_404(Thread, id=thread_id)
 
+    # ★ POST（返信投稿）処理
+    if request.method == "POST":
+        content = request.POST.get("content", "")
+        image_file = request.FILES.get("image_file")
+        video_file = request.FILES.get("video_file")
+
+        image_url = upload_to_r2_thread(image_file) if image_file else None
+        video_url = upload_to_r2_thread(video_file) if video_file else None
+
+        Reply.objects.create(
+            thread=thread,
+            content=content,
+            image=image_url,
+            video=video_url,
+        )
+
+        return redirect("thread_detail", thread_id=thread.id)
+
+    # ★ GET（表示）
     total = thread.replies.count()
 
     # 新しい順で50件
