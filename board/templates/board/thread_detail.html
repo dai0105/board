@@ -71,11 +71,11 @@
                         </div>
 
                         {% if r.image %}
-                            <img src="{{ r.image }}" class="reply-image">
+                            <img src="{{ r.obj.image }}" class="reply-image">
                         {% endif %}
 
                         {% if r.video %}
-                            <video src="{{ r.video }}" controls class="reply-video"></video>
+                            <video src="{{ r.obj.video }}" controls class="reply-video"></video>
                         {% endif %}
                     </div>
 
