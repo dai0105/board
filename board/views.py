@@ -168,6 +168,8 @@ def thread_detail(request, thread_id):
         numbered.append({
             "obj": r,
             "number": number,
+            "image": r.image,
+            "video": r.video,
         })
 
     return render(request, "board/thread_detail.html", {
