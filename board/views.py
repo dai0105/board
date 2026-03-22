@@ -100,17 +100,34 @@ def load_more_threads(request):
 def thread_create(request):
     if request.method == 'POST':
         form = ThreadForm(request.POST, request.FILES)
+
+        # ★ ここでログを出す（form.is_valid() の前）
+        print("=== DEBUG START ===")
+        print("FILES:", request.FILES)
+        print("POST:", request.POST)
+
         if form.is_valid():
+            print("FORM VALID")
             thread = form.save(commit=False)
 
             # ★ R2 にアップロードして URL を取得
             image = request.FILES.get("icon")
+            print("IMAGE:", image)  # ここもログ追加
+
             if image:
                 thread.icon = upload_to_r2_thread(image)
 
             thread.save()
             form.save_m2m()
+            print("=== DEBUG END (SUCCESS) ===")
             return redirect('thread_detail', thread.id)
+
+        else:
+            # ★ form が invalid のときの詳細ログ
+            print("FORM INVALID")
+            print("FORM ERRORS:", form.errors)
+            print("=== DEBUG END (INVALID) ===")
+
     else:
         form = ThreadForm()
 
