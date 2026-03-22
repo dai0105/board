@@ -17,12 +17,11 @@ class ThreadForm(forms.ModelForm):
 
     class Meta:
         model = Thread
-        fields = ['title', 'content', 'icon', 'tags']
+        fields = ['title', 'content', 'tags']  # ★ icon を外す
         labels = {
             'title': 'タイトル',
             'content': '内容',
             'tags': 'タグ',
-            'icon': 'アイコン',
         }
         widgets = {
             'tags': forms.CheckboxSelectMultiple,
