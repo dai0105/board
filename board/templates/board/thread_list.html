@@ -48,7 +48,7 @@
     <a href="{% url 'thread_detail' t.id %}" class="card" id="thread-{{ t.id }}">
         <div class="icon">
             {% if t.icon %}
-                <img src="{{ t.icon.url }}" alt="icon">
+                <img src="{{ t.icon }}" alt="icon">
             {% endif %}
         </div>
 
