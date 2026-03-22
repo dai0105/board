@@ -32,14 +32,10 @@
     <label>タグ</label>
     <div class="tag-list">
         {% for checkbox in form.tags %}
-            <div class="tag-list">
-                {% for checkbox in form.tags %}
-                    {{ checkbox.tag }}  <!-- input -->
-                    <label for="{{ checkbox.id_for_label }}" class="tag-badge">
-                        {{ checkbox.choice_label }}
-                    </label>
-                {% endfor %}
-            </div>
+            {{ checkbox.tag }}  <!-- input -->
+            <label for="{{ checkbox.id_for_label }}" class="tag-badge">
+                {{ checkbox.choice_label }}
+            </label>
         {% endfor %}
     </div>
 
