@@ -35,6 +35,9 @@ def thread_list(request):
     else:
         qs = qs.order_by("-updated_at")
 
+    # ▼ 件数（★ここが重要）
+    count = qs.count()
+
     # ▼ 最初の20件
     threads = qs[:20]
 
@@ -43,6 +46,7 @@ def thread_list(request):
         "sort": sort,
         "tag": tag,
         "q": search,
+        "count": count,          # ★追加
         "all_tags": Tag.objects.all(),
     })
 
