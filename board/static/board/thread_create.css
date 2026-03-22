@@ -112,3 +112,18 @@ form button:hover {
 
 
 
+.tag-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #F8BBD0;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 4px;
+    transition: 0.2s;
+}
+
+/* 選択中 */
+input[type="checkbox"]:checked + .tag-badge {
+    background: #C2185B;
+    color: white;
+}
