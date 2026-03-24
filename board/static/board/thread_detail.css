@@ -2,7 +2,47 @@ body {
     background: #f7f7f7;
     font-family: sans-serif;
     transform: none !important;
+    font-size: 16px;
+}
 
+@media (max-width: 600px) {
+
+    body {
+        font-size: 16px;
+    }
+
+    .thread-header {
+        padding: 12px;
+    }
+
+    .thread-title {
+        font-size: 20px;
+        line-height: 1.4;
+    }
+
+    .thread-content {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .reply-card {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .reply-text {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .meta {
+        font-size: 13px;
+    }
+
+    .reply-btn {
+        font-size: 13px;
+        padding: 4px 8px;
+    }
 }
 
 .page-wrapper {
