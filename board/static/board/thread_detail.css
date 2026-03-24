@@ -43,6 +43,32 @@ body {
         font-size: 13px;
         padding: 4px 8px;
     }
+
+    .reply-form {
+        padding: 12px;
+        margin-top: 16px;
+    }
+
+    .reply-form textarea {
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .reply-form input[type="file"] {
+        font-size: 14px;
+    }
+
+    .reply-form label {
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 10px;
+
 }
 
 .page-wrapper {
