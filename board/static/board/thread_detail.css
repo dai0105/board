@@ -39,36 +39,55 @@ body {
         font-size: 13px;
     }
 
-    .reply-btn {
-        font-size: 13px;
-        padding: 4px 8px;
+    .reply-form {
+        display: none; /* ← 最初は非表示 */
+        padding: 16px;
+        margin-top: 10px;
+        background: #fff;
+        border-radius: 12px;
     }
 
-    .reply-form {
-        padding: 12px;
-        margin-top: 16px;
+    .reply-form h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
     }
 
     .reply-form textarea {
+        width: 100%;
         font-size: 16px;
-        padding: 10px;
+        padding: 12px;
         border-radius: 8px;
-    }
-
-    .reply-form input[type="file"] {
-        font-size: 14px;
+        line-height: 1.6;
     }
 
     .reply-form label {
         font-size: 14px;
+        margin-top: 10px;
+        display: block;
     }
 
-    .submit-btn {
+    .reply-form input[type="file"] {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .reply-form button {
         width: 100%;
         font-size: 16px;
         padding: 12px;
         border-radius: 10px;
+        margin-top: 12px;
+    }
 
+    .reply-form-toggle {
+        background: #ff69b4;
+        color: #fff;
+        padding: 12px;
+        text-align: center;
+        border-radius: 12px;
+        font-size: 16px;
+        margin-top: 20px;
+    }
 }
 
 .page-wrapper {
