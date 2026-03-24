@@ -40,6 +40,12 @@
     検索結果：{{ count }} 件
 </p>
 
+<!-- ★ 広告（上部） -->
+<div class="ad-area">
+    {{ zucks_ad|safe }}
+</div>
+
+
 <a href="{% url 'thread_create' %}" class="create-thread-btn">＋新しいスレを作る</a>
 
 <!-- ▼ スレ一覧（ここだけを使う） -->
@@ -72,6 +78,12 @@
             </div>
         </div>
     </a>
+    {% if forloop.counter|divisibleby:5 %}
+        <div class="ad-area">
+            {{ zucks_ad|safe }}
+        </div>
+    {% endif %}
+
     {% endfor %}
 </div>
 <!-- ▲ スレ一覧 -->

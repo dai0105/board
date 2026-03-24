@@ -41,6 +41,8 @@ def thread_list(request):
     # ▼ 最初の20件
     threads = qs[:20]
 
+    zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
+
     return render(request, "board/thread_list.html", {
         "threads": threads,
         "sort": sort,
@@ -48,6 +50,7 @@ def thread_list(request):
         "q": search,
         "count": count,          # ★追加
         "all_tags": Tag.objects.all(),
+        "zucks_ad": zucks_ad,
     })
 
 
@@ -176,10 +179,14 @@ def thread_detail(request, thread_id):
             "video": r.video,
         })
 
+    # ★★★ ここに広告タグを置く（正しい位置） ★★★
+    zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
+
     return render(request, "board/thread_detail.html", {
         "thread": thread,
         "replies": numbered,
         "total": total,
+        "zucks_ad": zucks_ad,   # ← 追加
     })
 
 def load_more_replies(request, thread_id):
