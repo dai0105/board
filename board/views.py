@@ -112,7 +112,7 @@ def load_more_threads(request):
         data.append({
             "id": t.id,
             "title": t.title,
-            "content": t.content,
+            "content": t.content.replace("\n", "<br>") if t.content else "",
             "updated": t.updated_at.isoformat() if t.updated_at else "",
             "reply_count": t.replies.count(),
             "momentum": t.momentum,
