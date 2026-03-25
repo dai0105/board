@@ -48,6 +48,10 @@
 <!-- ▼ page-wrapper（★ detail と同じ構造に揃える） -->
 <div class="page-wrapper">
 
+    <div class="ad-area">
+        {{ zucks_ad|safe }}
+    </div>
+
     <!-- ▼ スレ一覧 -->
     <div id="thread-list">
         {% for t in threads %}
@@ -176,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     if ((offset + index + 1) % 5 === 0) {
                         const ad = document.createElement("div");
                         ad.classList.add("ad-area");
-                        ad.innerHTML = `{{ zucks_ad|safe }}`;
+                        ad.innerHTML = `{% filter escapejs %}{{ zucks_ad|safe }}{% endfilter %}`;
                         list.appendChild(ad);
                     }
                 });
