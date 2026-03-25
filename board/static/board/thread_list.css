@@ -125,6 +125,20 @@ body {
     border-radius: 4px;
 }
 
+@media (max-width: 600px) {
+    .search-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box input,
+    .search-box select,
+    .search-box button {
+        width: 100%;
+    }
+}
+
 .result-count {
     font-size: 14px;
     color: #666;
