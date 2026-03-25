@@ -1,61 +1,49 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Thread, Reply
 from .forms import ThreadForm, ReplyForm
-from django.db.models import Q
+from django.db.models import Q, Count
 from .models import Thread, Tag
 from .utils import upload_to_r2_thread
 from django.http import JsonResponse
 
 def thread_list(request):
-    # ▼ パラメータ取得
     sort = request.GET.get("sort")
     tag = request.GET.get("tag")
     search = request.GET.get("q")
 
-    # ▼ スマホSafari対策
     if isinstance(tag, list):
         tag = tag[0]
 
     if tag in ["", None]:
         tag = None
 
-    # ▼ ベースのクエリ
     qs = Thread.objects.all()
 
-    # ▼ 絞り込み
     if tag:
         qs = qs.filter(tags__name=tag)
 
     if search:
         qs = qs.filter(title__icontains=search)
 
-    # ▼ 並び替え（デフォルトは updated）
     if not sort:
         sort = "updated"
 
-    # ▼ updated（最新順）
     if sort == "updated":
         qs = qs.order_by("-updated_at")
         threads = qs[:20]
 
-    # ▼ reply_count（レス数順）
     elif sort == "reply_count":
         qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
         threads = qs[:20]
 
-    # ▼ momentum（勢い順）
     elif sort == "momentum":
         threads = sorted(qs, key=lambda t: t.momentum, reverse=True)[:20]
 
-    # ▼ 想定外 → updated
     else:
         qs = qs.order_by("-updated_at")
         threads = qs[:20]
 
-    # ▼ 件数
     count = qs.count()
-
-    zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
 
     return render(request, "board/thread_list.html", {
         "threads": threads,
@@ -64,19 +52,16 @@ def thread_list(request):
         "q": search,
         "count": count,
         "all_tags": Tag.objects.all(),
-        "zucks_ad": zucks_ad,
     })
 
 
 
 def load_more_threads(request):
-    # ▼ パラメータ取得
     offset = int(request.GET.get("offset", 0))
     sort = request.GET.get("sort")
     tag = request.GET.get("tag")
     search = request.GET.get("q")
 
-    # ▼ 必ず最初に qs を作る（超重要）
     qs = Thread.objects.all()
 
     # ▼ 絞り込み
@@ -90,13 +75,20 @@ def load_more_threads(request):
     if not sort:
         sort = "updated"
 
+    # ▼ updated（最新順）
     if sort == "updated":
         qs = qs.order_by("-updated_at")
-    elif sort == "momentum":
-        qs = qs.order_by("-momentum")
+
+    # ▼ reply_count（レス数順）
     elif sort == "reply_count":
         qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
-        threads = qs[:20]
+
+    # ▼ momentum（勢い順）※DBでは不可 → Python 側で並び替え
+    elif sort == "momentum":
+        qs = list(qs)  # 一旦リスト化
+        qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
+
+    # ▼ 想定外 → updated
     else:
         qs = qs.order_by("-updated_at")
 
