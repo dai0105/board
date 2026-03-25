@@ -145,39 +145,36 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
             }
 
             data.threads.forEach(t => {
+                const a = document.createElement("a");
+                a.href = `/thread/${t.id}/`;  // ← これが正しい
+                a.classList.add("card");
+                a.id = `thread-${t.id}`;
 
-                // ▼ wrapper（div）を作る
-                const wrapper = document.createElement("div");
-                wrapper.classList.add("card-wrapper");
+                a.innerHTML = `
+                    <div class="icon">
+                        ${t.icon ? `<img src="${t.icon}" alt="icon">` : ""}
+                    </div>
 
-                // ▼ HTML を安全に構築
-                wrapper.innerHTML = `
-                    <a href="/threads/${t.id}/" class="card" id="thread-${t.id}">
-                        <div class="icon">
-                            ${t.icon ? `<img src="${t.icon}" alt="icon">` : ""}
+                    <div class="info">
+                        <div class="title">${t.title}</div>
+
+                        <div class="preview">
+                            ${(t.content || "").replace(/\n/g, "<br>")}
                         </div>
 
-                        <div class="info">
-                            <div class="title">${t.title}</div>
-
-                            <div class="preview">
-                                ${(t.content || "").replace(/\n/g, "<br>")}
-                            </div>
-
-                            <div class="tags">
-                                ${(t.tags || []).map(tag => `<span class="tag">${tag}</span>`).join("")}
-                            </div>
-
-                            <div class="meta">
-                                レス: ${t.reply_count}　
-                                勢い: ${t.momentum}　
-                                更新: ${timeSince(t.updated)}
-                            </div>
+                        <div class="tags">
+                            ${(t.tags || []).map(tag => `<span class="tag">${tag}</span>`).join("")}
                         </div>
-                    </a>
+
+                        <div class="meta">
+                            レス: ${t.reply_count}　
+                            勢い: ${t.momentum}　
+                            更新: ${timeSince(t.updated)}
+                        </div>
+                    </div>
                 `;
 
-                list.appendChild(wrapper);
+                list.appendChild(a);
             });
 
             offset += data.threads.length;
