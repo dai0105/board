@@ -6,4 +6,4 @@ boto3
 django-storages
 dj-database-url
 whitenoise
-psycopg2-binary
+psycopg[binary]
