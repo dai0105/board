@@ -135,6 +135,90 @@ def load_more_threads(request):
 
     return JsonResponse({"threads": data})
 
+def thread_create(request):
+    if request.method == 'POST':
+        form = ThreadForm(request.POST, request.FILES)
+
+        # ★ ここでログを出す（form.is_valid() の前）
+        print("=== DEBUG START ===")
+        print("FILES:", request.FILES)
+        print("POST:", request.POST)
+
+        if form.is_valid():
+            print("FORM VALID")
+            thread = form.save(commit=False)
+
+            # ★ R2 にアップロードして URL を取得
+            image = request.FILES.get("icon")
+            print("IMAGE:", image)  # ここもログ追加
+
+            if image:
+                thread.icon = upload_to_r2_thread(image)
+
+            thread.save()
+            form.save_m2m()
+            print("=== DEBUG END (SUCCESS) ===")
+            return redirect('thread_detail', thread.id)
+
+        else:
+            # ★ form が invalid のときの詳細ログ
+            print("FORM INVALID")
+            print("FORM ERRORS:", form.errors)
+            print("=== DEBUG END (INVALID) ===")
+
+    else:
+        form = ThreadForm()
+
+    return render(request, 'board/thread_create.html', {'form': form})
+
+
+def thread_detail(request, thread_id):
+    thread = get_object_or_404(Thread, id=thread_id)
+
+    # ★ POST（返信投稿）処理
+    if request.method == "POST":
+        content = request.POST.get("content", "")
+        image_file = request.FILES.get("image_file")
+        video_file = request.FILES.get("video_file")
+
+        image_url = upload_to_r2_thread(image_file) if image_file else None
+        video_url = upload_to_r2_thread(video_file) if video_file else None
+
+        Reply.objects.create(
+            thread=thread,
+            content=content,
+            image=image_url,
+            video=video_url,
+        )
+
+        return redirect("thread_detail", thread_id=thread.id)
+
+    # ★ GET（表示）
+    total = thread.replies.count()
+
+    # 新しい順で50件
+    replies = list(thread.replies.all().order_by("-id")[:50])
+
+    # 番号付け（新しい順）
+    numbered = []
+    for i, r in enumerate(replies):
+        number = total - i
+        numbered.append({
+            "obj": r,
+            "number": number,
+            "image": r.image,
+            "video": r.video,
+        })
+
+    # ★★★ ここに広告タグを置く（正しい位置） ★★★
+    zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
+
+    return render(request, "board/thread_detail.html", {
+        "thread": thread,
+        "replies": numbered,
+        "total": total,
+        "zucks_ad": zucks_ad,   # ← 追加
+    })
 
 def load_more_replies(request, thread_id):
     thread = get_object_or_404(Thread, id=thread_id)
