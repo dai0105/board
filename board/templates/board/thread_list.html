@@ -163,7 +163,7 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
                         </div>
 
                         <div class="tags">
-                            ${t.tags.map(tag => '<span class="tag">' + tag + '</span>').join("")}
+                            ${(t.tags || []).map(tag => '<span class="tag">' + tag + '</span>').join("")}
                         </div>
 
                         <div class="meta">
