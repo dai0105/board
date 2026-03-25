@@ -125,9 +125,9 @@ function timeSince(dateString) {
 <!-- ▼ もっと見る -->
 <script>
 let offset = {{ threads|length }};
-let sort = "{{ request.GET.sort|default:'' }}";
+let sort = "{{ sort }}";
 if (!sort) sort = "updated";
-let tag = "{{ request.GET.tag|default:'' }}";
+let tag = "{{ tag|default:'' }}";
 let search = "{{ q|default:'' }}";
 
 document.getElementById("load-more-btn").addEventListener("click", function() {
