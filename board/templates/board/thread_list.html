@@ -14,9 +14,10 @@
     <meta property="og:image" content="https://board-25nz.onrender.com/static/board/OGP.png">
     <meta property="og:type" content="website">
 </head>
+
 <body>
 
-<h2 class="page-title">推しトーク  スレ一覧</h2>
+<h2 class="page-title">推しトーク スレ一覧</h2>
 
 <!-- ▼ 検索フォーム -->
 <form method="GET" class="search-box">
@@ -25,7 +26,7 @@
     <select name="tag">
         <option value="">タグで絞り込み</option>
         {% for tag in all_tags %}
-            <option value="{{ tag.name }}" {% if request.GET.tag|default:'' == tag.name %}selected{% endif %}>
+            <option value="{{ tag.name }}" {% if request.GET.tag == tag.name %}selected{% endif %}>
                 {{ tag.name }}
             </option>
         {% endfor %}
@@ -33,71 +34,69 @@
 
     <select name="sort">
         <option value="">並び替え</option>
-        <option value="updated" {% if request.GET.sort|default:'' == 'updated' %}selected{% endif %}>更新順</option>
-        <option value="momentum" {% if request.GET.sort|default:'' == 'momentum' %}selected{% endif %}>勢い順</option>
-        <option value="reply_count" {% if request.GET.sort|default:'' == 'reply_count' %}selected{% endif %}>レス数順</option>
+        <option value="updated" {% if request.GET.sort == 'updated' %}selected{% endif %}>更新順</option>
+        <option value="momentum" {% if request.GET.sort == 'momentum' %}selected{% endif %}>勢い順</option>
+        <option value="reply_count" {% if request.GET.sort == 'reply_count' %}selected{% endif %}>レス数順</option>
     </select>
 
     <button type="submit">検索</button>
 </form>
 <!-- ▲ 検索フォーム -->
 
-<p class="result-count">
-    検索結果：{{ count }} 件
-</p>
+<p class="result-count">検索結果：{{ count }} 件</p>
 
-<!-- ★ 広告（上部） -->
-<div class="ad-area">
-    {{ zucks_ad|safe }}
-</div>
+<!-- ▼ page-wrapper（★ detail と同じ構造に揃える） -->
+<div class="page-wrapper">
 
-<a href="{% url 'thread_create' %}" class="create-thread-btn">＋新しいスレを作る</a>
-
-<!-- ▼ スレ一覧 -->
-<div id="thread-list">
-    {% for t in threads %}
-    <a href="{% url 'thread_detail' t.id %}" class="card" id="thread-{{ t.id }}">
-        <div class="icon">
-            {% if t.icon %}
-                <img src="{{ t.icon }}" alt="icon">
-            {% endif %}
-        </div>
-
-        <div class="info">
-            <div class="title">{{ t.title }}</div>
-
-            <div class="preview">
-                {{ t.content|truncatechars:60|linebreaksbr }}
+    <!-- ▼ スレ一覧 -->
+    <div id="thread-list">
+        {% for t in threads %}
+        <a href="{% url 'thread_detail' t.id %}" class="card" id="thread-{{ t.id }}">
+            <div class="icon">
+                {% if t.icon %}
+                    <img src="{{ t.icon }}" alt="icon">
+                {% endif %}
             </div>
 
-            <div class="tags">
-                {% for tag in t.tags.all %}
-                    <span class="tag">{{ tag.name }}</span>
-                {% endfor %}
+            <div class="info">
+                <div class="title">{{ t.title }}</div>
+
+                <div class="preview">
+                    {{ t.content|truncatechars:60|linebreaksbr }}
+                </div>
+
+                <div class="tags">
+                    {% for tag in t.tags.all %}
+                        <span class="tag">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="meta">
+                    レス: {{ t.replies.count }}　
+                    勢い: {{ t.momentum }}　
+                    更新: {{ t.updated_at|jtimesince }}
+                </div>
             </div>
+        </a>
 
-            <div class="meta">
-                レス: {{ t.replies.count }}　
-                勢い: {{ t.momentum }}　
-                更新: {{ t.updated_at|jtimesince }}
+        {% if forloop.counter|divisibleby:5 %}
+            <div class="ad-area">
+                {{ zucks_ad|safe }}
             </div>
-        </div>
-    </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <!-- ▲ スレ一覧 -->
 
-    {% if forloop.counter|divisibleby:5 %}
-        <div class="ad-area">
-            {{ zucks_ad|safe }}
-        </div>
-    {% endif %}
-    {% endfor %}
+    <!-- ▼ もっと見る（★ detail と同じ位置） -->
+    <div id="load-more-area">
+        <button id="load-more-btn">もっと見る</button>
+    </div>
+
 </div>
-<!-- ▲ スレ一覧 -->
+<!-- ▲ page-wrapper -->
 
-<div id="load-more-area">
-    <button id="load-more-btn">もっと見る</button>
-</div>
-
-<!-- ▼ 相対時間（JS版） -->
+<!-- ▼ 相対時間 -->
 <script>
 function timeSince(dateString) {
     const date = new Date(dateString);
@@ -113,21 +112,21 @@ function timeSince(dateString) {
 
     for (const interval of intervals) {
         const count = Math.floor(seconds / interval.seconds);
-        if (count >= 1) {
-            return `${count}${interval.label}前`;
-        }
+        if (count >= 1) return `${count}${interval.label}前`;
     }
     return "たった今";
 }
 </script>
 
-<!-- ▼ もっと見る -->
+<!-- ▼ もっと見る（★ detail と同じロジック） -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
     let offset = document.querySelectorAll("#thread-list .card").length;
+
     let sort = "{{ request.GET.sort|default:''|escapejs }}";
     if (!sort) sort = "updated";
+
     let tag = "{{ request.GET.tag|default:''|escapejs }}";
     let search = "{{ q|default:''|escapejs }}";
 
@@ -135,29 +134,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     btn.addEventListener("click", function() {
 
-        console.log("load more clicked. offset=", offset);
-
         fetch(`/threads/load_more/?offset=${offset}&sort=${sort}&tag=${tag}&q=${search}`)
-            .then(res => {
-                console.log("fetch status:", res.status);
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
-                console.log("load_more result:", data);
 
-                if (!data || !data.threads) {
-                    console.error("data.threads が存在しません:", data);
-                    return;
-                }
-
-                if (data.threads.length === 0) {
-                    btn.innerText = "これ以上ありません";
+                if (!data.threads || data.threads.length === 0) {
+                    document.getElementById("load-more-area").innerHTML = "<p>これ以上ありません</p>";
                     return;
                 }
 
                 const list = document.getElementById("thread-list");
 
-                data.threads.forEach(t => {
+                data.threads.forEach((t, index) => {
+
                     const a = document.createElement("a");
                     a.href = `/thread/${t.id}/`;
                     a.classList.add("card");
@@ -167,18 +156,12 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="icon">
                             ${t.icon ? `<img src="${t.icon}" alt="icon">` : ""}
                         </div>
-
                         <div class="info">
                             <div class="title">${t.title}</div>
-
-                            <div class="preview">
-                                ${(t.content || "").replace(/\n/g, "<br>")}
-                            </div>
-
+                            <div class="preview">${(t.content || "").replace(/\n/g, "<br>")}</div>
                             <div class="tags">
                                 ${(t.tags || []).map(tag => `<span class="tag">${tag}</span>`).join("")}
                             </div>
-
                             <div class="meta">
                                 レス: ${t.reply_count}　
                                 勢い: ${t.momentum}　
@@ -188,13 +171,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     `;
 
                     list.appendChild(a);
+
+                    // ★ detail と同じ：5件ごとに広告を挟む
+                    if ((offset + index + 1) % 5 === 0) {
+                        const ad = document.createElement("div");
+                        ad.classList.add("ad-area");
+                        ad.innerHTML = `{{ zucks_ad|safe }}`;
+                        list.appendChild(ad);
+                    }
                 });
 
                 offset += data.threads.length;
-                console.log("offset updated:", offset);
-            })
-            .catch(e => {
-                console.error("fetch error:", e);
             });
     });
 });
