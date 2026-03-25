@@ -45,6 +45,8 @@ def thread_list(request):
 
     count = qs.count()
 
+    zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
+
     return render(request, "board/thread_list.html", {
         "threads": threads,
         "sort": sort,
@@ -52,6 +54,7 @@ def thread_list(request):
         "q": search,
         "count": count,
         "all_tags": Tag.objects.all(),
+        "zucks_ad": zucks_ad,
     })
 
 
