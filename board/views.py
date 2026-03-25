@@ -12,15 +12,14 @@ def thread_list(request):
     tag = request.GET.get("tag")
     search = request.GET.get("q")
 
-    # ▼ スマホSafari対策：tag がリストで来た場合は先頭だけ使う
+    # ▼ スマホSafari対策
     if isinstance(tag, list):
         tag = tag[0]
 
-    # ▼ 空文字対策
     if tag in ["", None]:
         tag = None
 
-    # ▼ 必ず最初に qs を作る
+    # ▼ ベースのクエリ
     qs = Thread.objects.all()
 
     # ▼ 絞り込み
@@ -30,7 +29,7 @@ def thread_list(request):
     if search:
         qs = qs.filter(title__icontains=search)
 
-    # ▼ 並び替え（sort が空なら updated）
+    # ▼ 並び替え（デフォルトは updated）
     if not sort:
         sort = "updated"
 
@@ -39,17 +38,16 @@ def thread_list(request):
         qs = qs.order_by("-updated_at")
         threads = qs[:20]
 
-    # ▼ reply_count（返信数順）
+    # ▼ reply_count（レス数順）
     elif sort == "reply_count":
-        qs = qs.annotate(reply_count=Count("replies")).order_by("-reply_count")
+        qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
         threads = qs[:20]
 
-    # ▼ momentum（勢い順）※DBでは並び替えできないので Python 側でソート
+    # ▼ momentum（勢い順）
     elif sort == "momentum":
-        # qs を一旦リスト化して momentum で並び替え
         threads = sorted(qs, key=lambda t: t.momentum, reverse=True)[:20]
 
-    # ▼ 想定外の sort → updated にフォールバック
+    # ▼ 想定外 → updated
     else:
         qs = qs.order_by("-updated_at")
         threads = qs[:20]
@@ -68,6 +66,7 @@ def thread_list(request):
         "all_tags": Tag.objects.all(),
         "zucks_ad": zucks_ad,
     })
+
 
 
 def load_more_threads(request):
