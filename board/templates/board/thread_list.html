@@ -125,10 +125,10 @@ function timeSince(dateString) {
 <!-- ▼ もっと見る -->
 <script>
 let offset = {{ threads|length }};
-let sort = "{{ sort }}";
+let sort = "{{ request.GET.sort|default:''|escapejs }}";
 if (!sort) sort = "updated";
-let tag = "{{ tag|default:'' }}";
-let search = "{{ q|default:'' }}";
+let tag = "{{ request.GET.tag|default:''|escapejs }}";
+let search = "{{ q|default:''|escapejs }}";
 
 document.getElementById("load-more-btn").addEventListener("click", function() {
 
@@ -150,7 +150,7 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
 
                 a.innerHTML = `
                     <div class="icon">
-                        ${t.icon ? `<img src="${t.icon}" alt="icon">` : ""}
+                        ${t.icon ? '<img src="' + t.icon + '" alt="icon">' : ""}
                     </div>
 
                     <div class="info">
@@ -161,7 +161,7 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
                         </div>
 
                         <div class="tags">
-                            ${t.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+                            ${t.tags.map(tag => '<span class="tag">' + tag + '</span>').join("")}
                         </div>
 
                         <div class="meta">
