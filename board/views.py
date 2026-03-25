@@ -75,6 +75,11 @@ def load_more_threads(request):
 
     if sort == "updated":
         qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
+
+        total = qs.count()
+        if offset >= total:
+            return JsonResponse({"threads": []})
+
         threads = qs[offset:offset+20]
 
     elif sort == "reply_count":
