@@ -145,42 +145,44 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
             }
 
             data.threads.forEach(t => {
-                const a = document.createElement("a");
-                a.href = `/threads/${t.id}/`;
-                a.classList.add("card");
-                a.id = `thread-${t.id}`;
 
-                a.innerHTML = `
-                    <div class="icon">
-                        ${t.icon ? '<img src="' + t.icon + '" alt="icon">' : ""}
-                    </div>
+                // ▼ wrapper（div）を作る
+                const wrapper = document.createElement("div");
+                wrapper.classList.add("card-wrapper");
 
-                    <div class="info">
-                        <div class="title">${t.title}</div>
-
-                        <div class="preview">
-                            ${t.content.replace(/\n/g, "<br>")}
+                // ▼ HTML を安全に構築
+                wrapper.innerHTML = `
+                    <a href="/threads/${t.id}/" class="card" id="thread-${t.id}">
+                        <div class="icon">
+                            ${t.icon ? `<img src="${t.icon}" alt="icon">` : ""}
                         </div>
 
-                        <div class="tags">
-                            ${(t.tags || []).map(tag => '<span class="tag">' + tag + '</span>').join("")}
-                        </div>
+                        <div class="info">
+                            <div class="title">${t.title}</div>
 
-                        <div class="meta">
-                            レス: ${t.reply_count}　
-                            勢い: ${t.momentum}　
-                            更新: ${timeSince(t.updated)}
+                            <div class="preview">
+                                ${(t.content || "").replace(/\n/g, "<br>")}
+                            </div>
+
+                            <div class="tags">
+                                ${(t.tags || []).map(tag => `<span class="tag">${tag}</span>`).join("")}
+                            </div>
+
+                            <div class="meta">
+                                レス: ${t.reply_count}　
+                                勢い: ${t.momentum}　
+                                更新: ${timeSince(t.updated)}
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 `;
 
-                list.appendChild(a);
+                list.appendChild(wrapper);
             });
 
             offset += data.threads.length;
         });
 });
 </script>
-
 </body>
 </html>
