@@ -64,62 +64,40 @@ def load_more_threads(request):
 
     qs = Thread.objects.all()
 
-    # ▼ 絞り込み
     if tag:
         qs = qs.filter(tags__name=tag)
 
     if search:
         qs = qs.filter(title__icontains=search)
 
-    # ▼ 並び替え
     if not sort:
         sort = "updated"
 
     if sort == "updated":
         qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
 
-    elif sort == "reply_count":
-        qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
-
-    elif sort == "momentum":
-        # momentum だけは Python リストに変換
-        qs = list(qs)
-        qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
-
-        # offset → 20件切り出し
-        threads = qs[offset:offset+20]
-
-        # 空なら空配列
-        if not threads:
+        total = qs.count()
+        if offset >= total:
             return JsonResponse({"threads": []})
 
-        # JSON 生成
-        data = []
-        for t in threads:
-            data.append({
-                "id": t.id,
-                "title": t.title,
-                "content": t.content,
-                "updated": t.updated_at.isoformat() if t.updated_at else "",
-                "reply_count": t.replies.count(),
-                "momentum": t.momentum,
-                "tags": [tag.name for tag in t.tags.all()],
-                "icon": t.icon.url if t.icon else None,
-            })
-        return JsonResponse({"threads": data})
+        threads = qs[offset:offset+20]
+
+    elif sort == "reply_count":
+        qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
+        threads = qs[offset:offset+20]
+
+    elif sort == "momentum":
+        qs = list(qs)
+        qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
+        threads = qs[offset:offset+20]
 
     else:
         qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
+        threads = qs[offset:offset+20]
 
-    # ▼ offset が範囲外なら空を返す（ここが重要）
-    total = qs.count()
-    if offset >= total:
+    if not threads:
         return JsonResponse({"threads": []})
 
-    # ▼ 最後に threads を切り出す
-    threads = qs[offset:offset+20]
-
-    # ▼ JSON 生成
     data = []
     for t in threads:
         data.append({
