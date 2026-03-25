@@ -109,6 +109,11 @@ def load_more_threads(request):
 
     data = []
     for t in threads:
+        try:
+            icon_url = t.icon.url
+        except:
+            icon_url = None
+            
         data.append({
             "id": t.id,
             "title": t.title,
