@@ -73,17 +73,14 @@ def load_more_threads(request):
     if not sort:
         sort = "updated"
 
-    # updated
     if sort == "updated":
         qs = qs.order_by("-updated_at")
         threads = qs[offset:offset+20]
 
-    # reply_count
     elif sort == "reply_count":
         qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
         threads = qs[offset:offset+20]
 
-    # momentum（ここだけ特別処理）
     elif sort == "momentum":
         qs = list(qs)
         qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
@@ -93,7 +90,10 @@ def load_more_threads(request):
         qs = qs.order_by("-updated_at")
         threads = qs[offset:offset+20]
 
-    # JSON
+    # 🟦 ここで空チェック
+    if not threads:
+        return JsonResponse({"threads": []})
+
     data = []
     for t in threads:
         data.append({
