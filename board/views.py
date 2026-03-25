@@ -5,6 +5,7 @@ from django.db.models import Q, Count
 from .models import Thread, Tag
 from .utils import upload_to_r2_thread
 from django.http import JsonResponse
+import json
 
 def thread_list(request):
     sort = request.GET.get("sort")
@@ -113,17 +114,23 @@ def load_more_threads(request):
             icon_url = t.icon.url
         except:
             icon_url = None
-            
+
+        try:
+            icon_url = t.icon.url
+        except:
+            icon_url = None
+
         data.append({
             "id": t.id,
             "title": t.title,
-            "content": t.content.replace("\n", "<br>") if t.content else "",
+            "content": json.dumps(t.content or "")[1:-1],
             "updated": t.updated_at.isoformat() if t.updated_at else "",
             "reply_count": t.replies.count(),
-            "momentum": t.momentum,
-            "tags": [tag.name for tag in t.tags.all()],
-            "icon": t.icon.url if t.icon else None,
+            "momentum": float(t.momentum) if t.momentum is not None else 0,
+            "tags": [str(tag.name) for tag in t.tags.all()],
+            "icon": t.icon if t.icon else None,
         })
+
 
     return JsonResponse({"threads": data})
 
