@@ -64,17 +64,21 @@ def load_more_threads(request):
 
     qs = Thread.objects.all()
 
+    # ▼ 絞り込み
     if tag:
         qs = qs.filter(tags__name=tag)
 
     if search:
         qs = qs.filter(title__icontains=search)
 
+    # ▼ デフォルトは updated
     if not sort:
         sort = "updated"
 
+    # ▼ 並び替え
     if sort == "updated":
-        qs = qs.order_by("-updated_at")
+        # ★ NULL の updated_at を除外（500 の原因）
+        qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
         threads = qs[offset:offset+20]
 
     elif sort == "reply_count":
@@ -87,20 +91,21 @@ def load_more_threads(request):
         threads = qs[offset:offset+20]
 
     else:
-        qs = qs.order_by("-updated_at")
+        qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
         threads = qs[offset:offset+20]
 
-    # 🟦 ここで空チェック
+    # ▼ 空なら空配列を返す（JS 側の「これ以上ありません」用）
     if not threads:
         return JsonResponse({"threads": []})
 
+    # ▼ JSON 形式に変換
     data = []
     for t in threads:
         data.append({
             "id": t.id,
             "title": t.title,
             "content": t.content,
-            "updated": t.updated_at.isoformat(),
+            "updated": t.updated_at.isoformat() if t.updated_at else "",
             "reply_count": t.replies.count(),
             "momentum": t.momentum,
             "tags": [tag.name for tag in t.tags.all()],
