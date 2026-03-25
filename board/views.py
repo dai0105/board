@@ -95,7 +95,8 @@ def load_more_threads(request):
     elif sort == "momentum":
         qs = qs.order_by("-momentum")
     elif sort == "reply_count":
-        qs = qs.order_by("-reply_count")
+        qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
+        threads = qs[:20]
     else:
         qs = qs.order_by("-updated_at")
 
