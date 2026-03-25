@@ -20,12 +20,12 @@
 
 <!-- ▼ 検索フォーム -->
 <form method="GET" class="search-box">
-    <input type="text" name="q" placeholder="タイトルで検索" value="{{ q }}">
+    <input type="text" name="q" placeholder="タイトルで検索" value="{{ q|default:'' }}">
 
     <select name="tag">
         <option value="">タグで絞り込み</option>
         {% for tag in all_tags %}
-            <option value="{{ tag.name }}" {% if request.GET.tag == tag.name %}selected{% endif %}>
+            <option value="{{ tag.name }}" {% if request.GET.tag|default:'' == tag.name %}selected{% endif %}>
                 {{ tag.name }}
             </option>
         {% endfor %}
@@ -33,9 +33,9 @@
 
     <select name="sort">
         <option value="">並び替え</option>
-        <option value="updated" {% if request.GET.sort == 'updated' %}selected{% endif %}>更新順</option>
-        <option value="momentum" {% if request.GET.sort == 'momentum' %}selected{% endif %}>勢い順</option>
-        <option value="reply_count" {% if request.GET.sort == 'reply_count' %}selected{% endif %}>レス数順</option>
+        <option value="updated" {% if request.GET.sort|default:'' == 'updated' %}selected{% endif %}>更新順</option>
+        <option value="momentum" {% if request.GET.sort|default:'' == 'momentum' %}selected{% endif %}>勢い順</option>
+        <option value="reply_count" {% if request.GET.sort|default:'' == 'reply_count' %}selected{% endif %}>レス数順</option>
     </select>
 
     <button type="submit">検索</button>
