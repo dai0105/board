@@ -64,38 +64,36 @@ def load_more_threads(request):
 
     qs = Thread.objects.all()
 
-    # ▼ 絞り込み
     if tag:
         qs = qs.filter(tags__name=tag)
 
     if search:
         qs = qs.filter(title__icontains=search)
 
-    # ▼ 並び替え（sort が空なら updated）
     if not sort:
         sort = "updated"
 
-    # ▼ updated（最新順）
+    # updated
     if sort == "updated":
         qs = qs.order_by("-updated_at")
+        threads = qs[offset:offset+20]
 
-    # ▼ reply_count（レス数順）
+    # reply_count
     elif sort == "reply_count":
         qs = qs.annotate(num_replies=Count("replies")).order_by("-num_replies")
+        threads = qs[offset:offset+20]
 
-    # ▼ momentum（勢い順）※DBでは不可 → Python 側で並び替え
+    # momentum（ここだけ特別処理）
     elif sort == "momentum":
-        qs = list(qs)  # 一旦リスト化
+        qs = list(qs)
         qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
+        threads = qs[offset:offset+20]
 
-    # ▼ 想定外 → updated
     else:
         qs = qs.order_by("-updated_at")
+        threads = qs[offset:offset+20]
 
-    # ▼ offset から20件
-    threads = qs[offset:offset+20]
-
-    # ▼ JSON 形式に変換
+    # JSON
     data = []
     for t in threads:
         data.append({
@@ -110,7 +108,6 @@ def load_more_threads(request):
         })
 
     return JsonResponse({"threads": data})
-
 
 def thread_create(request):
     if request.method == 'POST':
