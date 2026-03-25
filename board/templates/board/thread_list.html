@@ -135,6 +135,8 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
     fetch(`/threads/load_more/?offset=${offset}&sort=${sort}&tag=${tag}&q=${search}`)
         .then(res => res.json())
         .then(data => {
+            console.log("load_more result:", data);
+
             const list = document.getElementById("thread-list");
 
             if (data.threads.length === 0) {
