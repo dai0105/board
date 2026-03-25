@@ -62,6 +62,12 @@ def load_more_threads(request):
     tag = request.GET.get("tag")
     search = request.GET.get("q")
 
+    if isinstance(tag, list):
+        tag = tag[0]
+
+    if tag in ["", None]:
+        tag = None
+
     qs = Thread.objects.all()
 
     if tag:
