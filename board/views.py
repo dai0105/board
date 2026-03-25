@@ -96,9 +96,9 @@ def load_more_threads(request):
         threads = qs[offset:offset+20]
 
     elif sort == "momentum":
-        qs = list(qs)
-        qs = sorted(qs, key=lambda t: t.momentum, reverse=True)
-        threads = qs[offset:offset+20]
+        all_threads = list(qs)
+        sorted_threads = sorted(all_threads, key=lambda t: t.momentum, reverse=True)
+        threads = sorted_threads[offset:offset+20]
 
     else:
         qs = qs.filter(updated_at__isnull=False).order_by("-updated_at")
