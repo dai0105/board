@@ -146,7 +146,7 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
 
             data.threads.forEach(t => {
                 const a = document.createElement("a");
-                a.href = `/thread/${t.id}/`;
+                a.href = `/threads/${t.id}/`;
                 a.classList.add("card");
                 a.id = `thread-${t.id}`;
 
@@ -159,7 +159,7 @@ document.getElementById("load-more-btn").addEventListener("click", function() {
                         <div class="title">${t.title}</div>
 
                         <div class="preview">
-                            ${t.content}
+                            ${t.content.replace(/\n/g, "<br>")}
                         </div>
 
                         <div class="tags">
