@@ -124,7 +124,7 @@ function timeSince(dateString) {
 
 <!-- ▼ もっと見る -->
 <script>
-let offset = {{ threads|length }};
+let offset = document.querySelectorAll("#thread-list .card").length;
 let sort = "{{ request.GET.sort|default:''|escapejs }}";
 if (!sort) sort = "updated";
 let tag = "{{ request.GET.tag|default:''|escapejs }}";
