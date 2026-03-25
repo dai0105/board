@@ -87,7 +87,6 @@ DATABASES = {
     'default': dj_database_url.config(
         default="postgresql://board_db_ufvt_user:Uy53T8xk45v6AKwmFUCs5XO2qWVW4pJw@dpg-d6vbrl7afjfc73cuobg0-a/board_db_ufvt",
         conn_max_age=600,
-        ssl_require=True
     )
 }
 
