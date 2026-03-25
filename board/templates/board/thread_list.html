@@ -179,7 +179,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     list.appendChild(a);
 
                     // ★ detail と同じ：5件ごとに広告を挟む
-                    if ((offset + index + 1) % 5 === 0) {
+                    const globalIndex = offset + index + 1;  // 全体で何件目か
+
+                    if (globalIndex % 5 === 0) {
                         const ad = document.createElement("div");
                         ad.classList.add("ad-area");
                         ad.innerHTML = `{% filter escapejs %}{{ zucks_ad|safe }}{% endfilter %}`;
