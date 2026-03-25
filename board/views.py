@@ -34,20 +34,28 @@ def thread_list(request):
     if not sort:
         sort = "updated"
 
+    # ▼ updated（最新順）
     if sort == "updated":
         qs = qs.order_by("-updated_at")
-    elif sort == "momentum":
-        qs = qs.order_by("-momentum")
+        threads = qs[:20]
+
+    # ▼ reply_count（返信数順）
     elif sort == "reply_count":
-        qs = qs.order_by("-reply_count")
+        qs = qs.annotate(reply_count=Count("replies")).order_by("-reply_count")
+        threads = qs[:20]
+
+    # ▼ momentum（勢い順）※DBでは並び替えできないので Python 側でソート
+    elif sort == "momentum":
+        # qs を一旦リスト化して momentum で並び替え
+        threads = sorted(qs, key=lambda t: t.momentum, reverse=True)[:20]
+
+    # ▼ 想定外の sort → updated にフォールバック
     else:
         qs = qs.order_by("-updated_at")
+        threads = qs[:20]
 
     # ▼ 件数
     count = qs.count()
-
-    # ▼ 最初の20件
-    threads = qs[:20]
 
     zucks_ad = '<script type="text/javascript" src="https://j.zucks.net.zimg.jp/j?f=722853"></script>'
 
