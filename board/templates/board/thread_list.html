@@ -20,7 +20,7 @@
 
 <!-- ▼ 検索フォーム -->
 <form method="GET" class="search-box">
-    <input type="text" name="q" placeholder="タイトルで検索" value="{{ request.GET.q }}">
+    <input type="text" name="q" placeholder="タイトルで検索" value="{{ q }}">
 
     <select name="tag">
         <option value="">タグで絞り込み</option>
@@ -128,7 +128,7 @@ let offset = {{ threads|length }};
 let sort = "{{ request.GET.sort|default:''|escapejs }}";
 if (!sort) sort = "updated";
 let tag = "{{ request.GET.tag|default:''|escapejs }}";
-let search = "{{ request.GET.q|default:''|escapejs }}";
+let search = "{{ q|default:''|escapejs }}";
 
 document.getElementById("load-more-btn").addEventListener("click", function() {
 
