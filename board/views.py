@@ -12,7 +12,15 @@ def thread_list(request):
     tag = request.GET.get("tag")
     search = request.GET.get("q")
 
-    # ▼ 必ず最初に qs を作る（超重要）
+    # ▼ スマホSafari対策：tag がリストで来た場合は先頭だけ使う
+    if isinstance(tag, list):
+        tag = tag[0]
+
+    # ▼ 空文字対策
+    if tag in ["", None]:
+        tag = None
+
+    # ▼ 必ず最初に qs を作る
     qs = Thread.objects.all()
 
     # ▼ 絞り込み
@@ -35,7 +43,7 @@ def thread_list(request):
     else:
         qs = qs.order_by("-updated_at")
 
-    # ▼ 件数（★ここが重要）
+    # ▼ 件数
     count = qs.count()
 
     # ▼ 最初の20件
@@ -48,7 +56,7 @@ def thread_list(request):
         "sort": sort,
         "tag": tag,
         "q": search,
-        "count": count,          # ★追加
+        "count": count,
         "all_tags": Tag.objects.all(),
         "zucks_ad": zucks_ad,
     })
